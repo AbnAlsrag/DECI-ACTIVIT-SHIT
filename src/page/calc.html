@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kidcalc</title>
+
+    <style>
+        #nums {
+            display: inline-grid;
+            grid-template-columns: auto auto auto;
+        }
+
+        #nums > button, #eq-btn {
+            padding: 30px;
+            font-size: x-large;
+        }
+
+        #ops, #eq-btn {
+            display: inline-grid;
+            grid-template-columns: auto;
+        }
+
+        #ops > button, #eq-btn {
+            padding: 25px;
+            font-size: x-large;
+        }
+
+        #clear-btn {
+            font-size: x-large;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <p id="info-bar"></p>
+    </nav>
+
+    <div id="display">
+        
+    </div>
+
+    <div id="buttons">
+        <div id="nums">
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button>0</button>
+        </div>
+
+        <div id="ops">
+            <button>+</button>
+            <button>-</button>
+            <button>x</button>
+            <button>÷</button>
+        </div>
+
+        <button id="eq-btn">=</button>
+
+        <br>
+        
+        <button id="clear-btn">Clear</button>
+    </div>
+
+    <script>
+        const display = document.getElementById("display");
+        const eq_btn = document.getElementById("eq-btn");
+        const clear_btn = document.getElementById("clear-btn");
+        const nums = document.getElementById("nums");
+        const ops = document.getElementById("ops");
+
+        let can_type = true;
+        let typed = false;
+        let can_eq = false;
+        let can_op = false;
+
+        const OPS = ["+", "-", "*", "/"];
+
+        function Clear() {
+            display.textContent = "0";
+            can_type = true;
+            typed = false;
+            can_eq = false;
+            can_op = false;
+        }
+
+        function UpdateState() {
+            can_eq = (typed && can_op) ? true : false;
+        }
+
+        for (let i = 0; i < 10; i++) {
+            nums.children[i].onclick = () => {
+                UpdateState();
+                
+                if (can_type) {
+                    if (!typed) {
+                        display.textContent = "";
+                        typed = true;
+                    }
+    
+                    display.textContent += "" + nums.children[i].textContent;
+                    can_op = true;
+                }
+            };
+        }
+
+        for (let i = 0; i < ops.children.length; i++) {
+            ops.children[i].onclick = () => {
+                UpdateState();
+    
+                if (can_type) {
+                    if (can_op) {
+                        display.textContent += OPS[i];
+                        can_op = false;
+                    }
+                }
+            }
+        }
+
+        eq_btn.onclick = () => {
+            UpdateState();
+
+            if (can_eq) {
+                display.textContent = eval(display.textContent);
+            } else {
+                console.error("SHIT!!!");
+            }
+        };
+
+        clear_btn.onclick = () => {
+            Clear();
+        };
+    </script>
+</body>
+</html>
